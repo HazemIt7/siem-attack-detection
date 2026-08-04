@@ -1,0 +1,15 @@
+---
+- name: Mise à jour de la configuration Wazuh Agent sur Windows
+  hosts: windows
+  tasks:
+
+    - name: Copier le nouveau fichier ossec.conf
+      ansible.windows.win_copy:
+        src: ossec.conf
+        dest: 'C:\Program Files (x86)\ossec-agent\ossec.conf'
+        backup: yes  # Crée une sauvegarde automatique de l'ancien fichier (.bak)
+
+    - name: Redémarrer le service Wazuh
+      ansible.windows.win_service:
+        name: WazuhSvc
+        state: restarted

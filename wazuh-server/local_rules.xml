@@ -1,0 +1,327 @@
+<!-- Local rules -->
+
+<!-- Modify it at your will. -->
+<!-- Copyright (C) 2015, Wazuh Inc. -->
+
+
+<group name="linux, mitre_attack, custom_rules,">
+
+  <rule id="100001" level="12">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">mitre_execution</field>
+    <mitre>
+      <id>T1059.004</id>
+    </mitre>
+    <description>Exécution suspecte : Potentiel Reverse Shell détecté.</description>
+  </rule>
+
+
+  <rule id="100002" level="8">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">credential_access</field>
+    <mitre>
+      <id>T1003.008</id>
+    </mitre>
+    <description>Extraction d'identifiants: Lecture des fichiers d'identifiants</description>
+  </rule>
+
+  <rule id="100003" level="12">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">account_manipulation</field>
+    <mitre>
+      <id>T1098</id>
+    </mitre>
+    <description>Élévation de privilèges : manipulation des groupes</description>
+  </rule>
+
+
+  <rule id="100004" level="12">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">create_account</field>
+    <mitre>
+      <id>T1136</id>
+    </mitre>
+    <description>Persistence: manipulation des comptes utilisateur locaux</description>
+  </rule>
+
+
+  <rule id="100005" level="12">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">mitre_defense_evasion_T1070.002</field>
+    <mitre>
+      <id>T1070.002</id>
+    </mitre>
+    <description>Defense evasion : modifications/suppressions des fichiers logs</description>
+  </rule>
+
+  <rule id="100006" level="12">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">mitre_defense_evasion_T1070.004</field>
+    <mitre>
+      <id>T1070.004</id>
+    </mitre>
+    <description>Defense evasion: utilisation de la commande rm</description>
+  </rule>
+
+  <rule id="100007" level="12">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">mitre_discovery</field>
+    <mitre>
+      <id>T1082</id>
+    </mitre>
+    <description>Decouverte: Utilisation des commandes pour découvrir le systeme</description>
+  </rule>
+
+  <rule id="100008" level="12">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">mitre_lateral_movement</field>
+    <mitre>
+      <id>T1570</id>
+    </mitre>
+    <description>Mouvement latéral: Utilisation des commande pour transfert de fichiers</description>
+  </rule>
+
+  <rule id="100009" level="12">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">mitre_c2</field>
+    <mitre>
+      <id>T1105</id>
+    </mitre>
+    <description>Commande et control: Téléchargement des charges utiles (payloads)</description>
+  </rule>
+
+  <rule id="100010" level="12">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">mitre_collection</field>
+    <mitre>
+      <id>T1560</id>
+    </mitre>
+    <description>Collection: Archivage de données sensibles</description>
+  </rule>
+
+  <rule id="100011" level="12">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">mitre_persistence_cron</field>
+    <mitre>
+      <id>T1053.003</id>
+    </mitre>
+    <description>Persistence: Utilisation de la commande crontab</description>
+  </rule>
+
+  <rule id="100012" level="12">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">mitre_privilege_escalation</field>
+    <mitre>
+      <id>T1548.003</id>
+    </mitre>
+    <description>Escalade de prévilege: modification du fichier sudoers</description>
+  </rule>
+
+  <rule id="100013" level="12">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">mitre_account_manipulation</field>
+    <mitre>
+      <id>T1098</id>
+    </mitre>
+    <description>Persistence: Manipulation de comptes utilisateurs</description>
+  </rule>
+
+  <rule id="100014" level="12">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">mitre_rootkit</field>
+    <mitre>
+      <id>T1014</id>
+    </mitre>
+    <description>Defense evasion: Insertion/chargement de modules noyau</description>
+  </rule>
+
+  <rule id="100015" level="12">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">mitre_obfuscated_execution</field>
+    <mitre>
+      <id>T1027</id>
+    </mitre>
+    <description>Defense evasion: utilisation de base64 pour décoder des charges utiles (payloads)</description>
+  </rule>
+
+  <rule id="100016" level="12">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">mitre_network_sniffing</field>
+    <mitre>
+      <id>T1040</id>
+    </mitre>
+    <description>Credential access: utilisation d'outils de capture de paquets</description>
+  </rule>
+
+  <rule id="100017" level="12">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">mitre_network_discovery</field>
+    <mitre>
+      <id>T1049</id>
+    </mitre>
+    <description>Découverte : utilisation d'outils de découverte de connexion réseau</description>
+  </rule>
+
+  <rule id="100018" level="12">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">mitre_data_destruction</field>
+    <mitre>
+      <id>T1485</id>
+    </mitre>
+    <description>Impact: Utilisation de commande 'dd' pour détruire les données</description>
+  </rule>
+
+  <rule id="100019" level="12">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">mitre_service_stop</field>
+    <field name="audit.execve.a1" type="pcre2">^stop$|^disable$|^mask$|^halt$|^poweroff$|^reboot$</field>
+    <mitre>
+      <id>T1489</id>
+    </mitre>
+    <description>Impact: Utilisation de systemctl pour stopper des services</description>
+  </rule>
+
+  <rule id="100038" level="12">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">mitre_service_stop</field>
+    <field name="audit.exe" type="pcre2">/kill$|/killall$|/pkill$</field>
+    <mitre>
+      <id>T1489</id>
+    </mitre>
+    <description>Impact: Utilisation d'utilitaires système (kill/killall/pkill) pour forcer l'arrêt de processus</description>
+  </rule>
+
+
+<rule id="100024" level="0">
+    <if_sid>100002</if_sid>
+    <field name="audit.exe">^/usr/sbin/sshd$</field>
+    <description>Exception : Lecture légitime de /etc/shadow par le service SSH (ignorée)</description>
+  </rule>
+
+<rule id="100025" level="0">
+    <if_sid>100007</if_sid>
+    <field name="audit.exe">^/var/ossec$</field>
+    <description>Exception : lecture du fichier shadow par ossec </description>
+  </rule>
+
+
+
+
+
+<rule id="100028" level="0">
+    <if_sid>100002</if_sid>
+    <field name="audit.exe">^/usr/lib/systemd/systemd-executor$</field>
+    <description>Exception : Lecture légitime de /etc/shadow par systemd-executor (ignorée)</description>
+  </rule>
+
+<rule id="100029" level="0">
+    <if_sid>100019</if_sid>
+    <field name="audit.exe">^/usr/bin/systemctl$|^/bin/systemctl$</field>
+    <field name="audit.execve.a1">^--user$</field>
+    <description>Exception : Commande systemctl légitime pour la session utilisateur (ignorée)</description>
+  </rule>
+
+<rule id="100030" level="0">
+    <if_sid>100007</if_sid>
+    <field name="audit.exe">^/usr/bin/uname$|^/bin/uname$</field>
+    <field name="audit.execve.a1">^-o$|^-r$|^-m$</field>
+    <description>Exception : Exécution légitime de uname par les scripts de connexion</description>
+  </rule>
+
+  <rule id="100031" level="0">
+    <if_sid>100007</if_sid>
+    <field name="audit.exe">^/usr/bin/cat$|^/bin/cat$</field>
+    <field name="audit.execve.a1">^/var/cache/motd-news$|^/run/motd.d/|^/var/lib/update-notifier/</field>
+    <description>Exception : Lecture des fichiers de bienvenue/mises à jour à la connexion</description>
+  </rule>
+
+  <rule id="100032" level="0">
+    <if_sid>100007</if_sid>
+    <field name="audit.exe">^/usr/bin/id$|^/bin/id$</field>
+    <field name="audit.execve.a1">^-u$</field>
+    <description>Exception : Vérification légitime de l'ID utilisateur par le système</description>
+  </rule>
+
+  <rule id="100033" level="0">
+    <if_sid>100007</if_sid>
+    <field name="audit.exe">^/usr/bin/who$|^/bin/who$</field>
+    <field name="audit.execve.a1">^-q$</field>
+    <description>Exception : Vérification des utilisateurs connectés par le système</description>
+  </rule>
+
+  
+
+  <rule id="100035" level="0">
+    <if_sid>100005</if_sid>
+    <field name="audit.exe">^/usr/bin/mv$|^/bin/mv$|^/usr/bin/chmod$|^/bin/chmod$|^/usr/bin/chown$|^/bin/chown$|^/usr/bin/chgrp$|^/bin/chgrp$|^/usr/bin/ln$|^/bin/ln$|^/usr/lib/systemd/systemd-executor$</field>
+    <field name="audit.file.name">^/var/log/dmesg|^/var/log//dmesg</field>
+    <description>Exception : Rotation et gestion des permissions du journal dmesg (ignorée)</description>
+  </rule>
+
+
+  <rule id="100036" level="0">
+    <if_group>custom_rules</if_group>
+    <field name="audit.exe">^/var/ossec/bin/wazuh-agentd$|^/var/ossec/bin/wazuh-syscheckd$|^/var/ossec/bin/wazuh-logcollector$|^/var/ossec/bin/wazuh-modulesd$|^/var/ossec/bin/wazuh-execd$</field>
+    <description>Exception : Processus internes de l'agent Wazuh autorisés (ignorée)</description>
+  </rule>
+
+
+  <rule id="100037" level="0">
+    <if_sid>100003</if_sid>
+    <field name="audit.cwd">^/var/ossec$</field>
+    <field name="audit.auid">^4294967295$</field>
+    <field name="audit.exe">^/usr/sbin/useradd$</field>
+    <field name="audit.execve.a1">^-D$</field>
+    <description>Exception : Vérification des politiques de comptes par le module SCA Wazuh (ignorée)</description>
+  </rule>
+
+  <rule id="100038" level="0">
+    <if_sid>100002</if_sid>
+    <field name="audit.cwd">^/var/ossec$</field>
+    <field name="audit.auid">^4294967295$</field>
+    <field name="audit.exe">^/usr/bin/passwd$|^/bin/passwd$</field>
+    <description>Exception : Vérification du statut des mots de passe par le module SCA Wazuh (ignorée)</description>
+  </rule>
+
+
+</group>
+
+
+
+
+<group name="linux, ssh, sudo, custom_rules, mitre_attack,">
+
+  <rule id="100020" level="10">
+    <if_sid>5763</if_sid>
+    <mitre>
+      <id>T1110.001</id>
+    </mitre>
+    <description>Attaque par force brute SSH détectée : Multiples échecs depuis la même IP.</description>
+  </rule>
+
+  <rule id="100021" level="3">
+    <if_sid>5715</if_sid>
+    <mitre>
+      <id>T1021.004</id>
+    </mitre>
+    <description>Connexion SSH réussie pour l'utilisateur $(srcuser) depuis l'IP $(srcip).</description>
+  </rule>
+
+  <rule id="100022" level="5">
+    <if_sid>5402</if_sid>
+    <mitre>
+      <id>T1548.003</id>
+    </mitre>
+    <description>Utilisation réussie de SUDO par l'utilisateur $(user).</description>
+  </rule>
+
+  <rule id="100023" level="8">
+    <if_sid>5403</if_sid>
+    <mitre>
+      <id>T1548.003</id>
+    </mitre>
+    <description>Tentative SUDO échouée : L'utilisateur $(user) n'a pas les droits ou a fait une erreur de mot de passe.</description>
+  </rule>
+
+</group>
+

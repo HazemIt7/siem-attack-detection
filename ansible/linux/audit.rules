@@ -1,0 +1,98 @@
+# 1. EXECUTION (T1059) : Surveillance des interpréteurs de commandes (Reverse Shells)
+-a always,exit -F arch=b64 -S execve -F exe=/bin/bash -k mitre_execution
+-a always,exit -F arch=b64 -S execve -F exe=/bin/nc -k mitre_execution
+-a always,exit -F arch=b64 -S execve -F exe=/usr/bin/nc -k mitre_execution
+-a always,exit -F arch=b64 -S execve -F exe=/usr/bin/python3 -k mitre_execution
+-a always,exit -F arch=b64 -S execve -F exe=/usr/bin/sh -k mitre_execution
+-a always,exit -F arch=b64 -S execve -F exe=/bin/sh -k mitre_execution
+
+
+# Credential Access T1003.008
+-w /etc/shadow -p rwa -k credential_access
+-w /etc/gshadow -p ra -k credential_access
+
+
+# Manipulation de comptes T1098
+-w /etc/group -p wa -k account_manipulation
+
+# Création de comptes locaux T1136
+-w /etc/passwd -p wa -k  create_account
+
+# DEFENSE EVASION (T1070) : Surveillance de la suppression de journaux
+# Surveille les modifications/suppressions dans /var/log
+-w /var/log/ -p wa -k mitre_defense_evasion_T1070.002
+# Surveille l'utilisation de la commande rm
+-a always,exit -F arch=b64 -S execve -F exe=/bin/rm -k mitre_defense_evasion_T1070.004
+
+
+# DISCOVERY (T1082) : Découverte du système
+-a always,exit -F arch=b64 -S execve -F exe=/bin/uname -k mitre_discovery
+-a always,exit -F arch=b64 -S execve -F exe=/bin/cat -k mitre_discovery
+-a always,exit -F arch=b64 -S execve -F exe=/bin/hostname -k mitre_discovery
+-a always,exit -F arch=b64 -S execve -F exe=/bin/hostnamectl -k mitre_discovery
+-a always,exit -F arch=b64 -S execve -F exe=/bin/who -k mitre_discovery
+-a always,exit -F arch=b64 -S execve -F exe=/bin/w -k mitre_discovery
+-a always,exit -F arch=b64 -S execve -F exe=/bin/id -k mitre_discovery
+-a always,exit -F arch=b64 -S execve -F exe=/bin/ps -k mitre_discovery
+-a always,exit -F arch=b64 -S execve -F exe=/bin/top -k mitre_discovery
+-a always,exit -F arch=b64 -S execve -F exe=/bin/htop -k mitre_discovery
+
+
+# COMMAND AND CONTROL (T1105) : Téléchargement de charges utiles (Payloads)
+-a always,exit -F arch=b64 -S execve -F exe=/usr/bin/wget -k mitre_c2
+-a always,exit -F arch=b64 -S execve -F exe=/usr/bin/curl -k mitre_c2
+-a always,exit -F arch=b64 -S execve -F exe=/usr/bin/nc -k mitre_c2
+-a always,exit -F arch=b64 -S execve -F exe=/usr/bin/scp -k mitre_c2
+-a always,exit -F arch=b64 -S execve -F exe=/usr/bin/rsync -k mitre_c2
+-a always,exit -F arch=b64 -S execve -F exe=/usr/bin/sftp -k mitre_c2
+
+
+# COLLECTION / EXFILTRATION (T1560) : Archivage de données sensibles
+-a always,exit -F arch=b64 -S execve -F exe=/bin/tar -k mitre_collection
+-a always,exit -F arch=b64 -S execve -F exe=/usr/bin/zip -k mitre_collection
+
+# PERSISTENCE (T1053.003) : Tâches planifiées (Cron)
+# Surveille l'utilisation de la commande crontab pour créer des tâches malveillantes
+-a always,exit -F arch=b64 -S execve -F exe=/usr/bin/crontab -k mitre_persistence_cron
+-w /etc/cron.d/ -p wa -k mitre_persistence_cron
+
+# PRIVILEGE ESCALATION (T1548) : Abus des mécanismes de contrôle (Sudoers)
+# Surveille la modification du fichier sudoers (attribution de droits root)
+-w /etc/sudoers -p wa -k mitre_privilege_escalation
+-w /etc/sudoers.d/ -p wa -k mitre_privilege_escalation
+
+# PERSISTENCE (T1098) : Manipulation de comptes (Création d'utilisateurs cachés)
+# Surveille l'utilisation des binaires de gestion de comptes
+-a always,exit -F arch=b64 -S execve -F exe=/usr/sbin/useradd -k mitre_account_manipulation
+-a always,exit -F arch=b64 -S execve -F exe=/usr/sbin/usermod -k mitre_account_manipulation
+
+# DEFENSE EVASION (T1014) : Rootkits / Chargement de modules noyau
+# Détecte l'insertion de modules kernel (insmod, modprobe)
+-a always,exit -F arch=b64 -S execve -F exe=/usr/sbin/insmod -k mitre_rootkit
+-a always,exit -F arch=b64 -S execve -F exe=/usr/sbin/modprobe -k mitre_rootkit
+-a always,exit -F arch=b64 -S execve -F exe=/usr/sbin/rmmod -k mitre_rootkit
+
+# DEFENSE EVASION (T1027.010) : Fichiers ou informations obfusqués
+# Détecte l'utilisation de base64 pour décoder des charges utiles (payloads) à la volée
+-a always,exit -F arch=b64 -S execve -F exe=/usr/bin/base64 -k mitre_obfuscated_execution
+
+# CREDENTIAL ACCESS (T1040) : Sniffing Réseau
+# Détecte l'utilisation d'outils de capture de paquets
+-a always,exit -F arch=b64 -S execve -F exe=/usr/sbin/tcpdump -k mitre_network_sniffing
+-a always,exit -F arch=b64 -S execve -F exe=/usr/bin/tshark -k mitre_network_sniffing
+
+# DISCOVERY (T1049) : Découverte des connexions réseau
+# Détecte la cartographie des connexions actives du serveur
+-a always,exit -F arch=b64 -S execve -F exe=/usr/bin/netstat -k mitre_network_discovery
+-a always,exit -F arch=b64 -S execve -F exe=/usr/bin/ss -k mitre_network_discovery
+
+# IMPACT (T1485) : Destruction de données
+# Détecte l'utilisation de la commande 'dd' souvent utilisée pour écraser des disques ou vider la RAM
+-a always,exit -F arch=b64 -S execve -F exe=/usr/bin/dd -k mitre_data_destruction
+
+# IMPACT (T1489) : Arrêt de services (Désactivation des sécurités)
+# Détecte l'utilisation de systemctl pour stopper des services (ex: pare-feu, antivirus, logs)
+-a always,exit -F arch=b64 -S execve -F exe=/usr/bin/systemctl -k mitre_service_stop
+-a always,exit -F arch=b64 -S execve -F exe=/usr/bin/kill -k mitre_service_stop
+-a always,exit -F arch=b64 -S execve -F exe=/usr/bin/killall -k mitre_service_stop
+-a always,exit -F arch=b64 -S execve -F exe=/usr/bin/pkill -k mitre_service_stop

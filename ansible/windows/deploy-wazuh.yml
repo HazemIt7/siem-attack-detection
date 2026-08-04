@@ -1,0 +1,35 @@
+---
+- name: Deploy Wazuh Agent on Windows
+  hosts: windows
+  gather_facts: no
+
+  vars:
+    wazuh_manager_ip: "192.168.56.10"
+    local_msi_path: "wazuh-agent-4.14.3-1.msi"
+    remote_temp_dir: "C:\\Temp"
+
+  tasks:
+    - name: Create a temporary directory for the installer
+      ansible.windows.win_file:
+        path: "{{ remote_temp_dir }}"
+        state: directory
+
+    - name: Copy Wazuh agent installer to the remote host
+      ansible.windows.win_copy:
+        src: "{{ local_msi_path }}"
+        dest: "{{ remote_temp_dir }}\\{{ local_msi_path }}"
+
+    - name: Install Wazuh agent
+      ansible.windows.win_package:
+        path: "{{ remote_temp_dir }}\\{{ local_msi_path }}"
+        arguments:
+          - /qn
+          - WAZUH_MANAGER={{ wazuh_manager_ip }}
+          - WAZUH_REGISTRATION_SERVER={{ wazuh_manager_ip }}
+        state: present
+        product_id: "Wazuh Agent" # You might need to adjust this ID
+
+    - name: Clean up the installer
+      ansible.windows.win_file:
+        path: "{{ remote_temp_dir }}"
+        state: absent

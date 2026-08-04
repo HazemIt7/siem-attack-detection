@@ -1,0 +1,31 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Déployer les règles auditd
+      ansible.builtin.copy:
+        src: audit.rules
+        dest: /etc/audit/rules.d/audit.rules
+        owner: root
+        group: root
+        mode: '0640'
+      notify: Reload auditd rules
+
+    - name: Déployer la configuration de Wazuh
+      ansible.builtin.copy:
+        src: ossec.conf
+        dest: /var/ossec/etc/ossec.conf
+        owner: root
+        group: wazuh
+        mode: '0660'
+      notify: Restart wazuh-agent
+
+  handlers:
+    - name: Reload auditd rules
+      ansible.builtin.command:
+        cmd: augenrules --load
+
+    - name: Restart wazuh-agent
+      ansible.builtin.service:
+        name: wazuh-agent
+        state: restarted
