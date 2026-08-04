@@ -129,6 +129,19 @@ Includes **38 custom Wazuh detection rules** (Rule IDs `100001` through `100039`
 
 ---
 
+## 🔮 Future Improvements & Roadmap
+
+Planned enhancements for the SIEM detection and telemetry pipeline:
+
+- [ ] **SOAR Integration**: Connect Wazuh with **Shuffle SOAR** or **Cortex** to automate incident response playbooks (e.g., auto-isolating compromised endpoints and blocking malicious IP addresses at the firewall).
+- [ ] **Threat Intelligence Feed Integration**: Incorporate **MISP** and **AlienVault OTX** feeds into Wazuh Server for automated IoC (IPs, domain names, file hashes) correlation.
+- [ ] **Expanded MITRE ATT&CK Rule Coverage**: Develop custom detection rules for Active Directory attacks (e.g., Kerberoasting, DCSync) and Cloud environment telemetry (AWS CloudTrail / Azure Activity logs).
+- [ ] **Automated Rule Validation via CI/CD**: Integrate **Atomic Red Team** attack simulation scripts directly into GitHub Actions to test and validate detection rules upon every commit.
+- [ ] **Machine Learning Anomaly Detection**: Implement ML-based user & entity behavior analytics (UEBA) for detecting baseline authentication and network anomalies.
+
+---
+
 ## 📄 License
 
 This project is licensed under the [MIT License](LICENSE).
+
