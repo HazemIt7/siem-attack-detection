@@ -27,7 +27,7 @@ siem-attack-detection/
 │       ├── inventory.ini             # Windows targets inventory
 │       └── ossec.conf                # Wazuh Windows agent config
 ├── wazuh-server/
-│   └── local_rules.xml               # 38 custom SIEM detection rules (ID 100001-100039)
+│   └── local_rules.xml               # Custom SIEM detection rules (ID 100100-100112)
 ├── docs/
 │   ├── architecture-diagram.png      # VirtualBox host-only topology diagram
 │   └── report.pdf                    # Full project documentation & PFE report
@@ -52,21 +52,27 @@ The lab topology operates on a VirtualBox host-only network (`192.168.56.0/24`):
 
 ---
 
-## 🔍 Custom Detection Rules (`local_rules.xml`)
+## 🔍 Custom Detection Rules (`local_rules.xml`) & Auditd Architecture
 
-Includes **38 custom Wazuh detection rules** (Rule IDs `100001` through `100039`) tailored to detect adversary behaviors and telemetry anomalies.
+The detection engine correlates high-fidelity Auditd events (`auid >= 1000` to filter out background system daemons and focus exclusively on interactive user and adversary actions).
 
-### Key Mapped MITRE ATT&CK Techniques:
+### Rule Mappings & MITRE ATT&CK Matrix:
 
-- **T1059.004 (Command and Scripting Interpreter: Unix Shell)**: Reverse shell detection (bash, nc, python3).
-- **T1003.008 (OS Credential Dumping: /etc/shadow)**: Unauthorized access to credential stores.
-- **T1098 / T1136 (Account Manipulation & Creation)**: Local account and group modification.
-- **T1070.002 / T1070.004 (Indicator Removal on Host)**: Log tampering or bulk `rm` usage.
-- **T1053.003 (Scheduled Task/Job: Cron)**: Cron table persistence modifications.
-- **T1548.003 (Abuse Elevation Control: Sudo / Sudoers)**: `/etc/sudoers` modifications & privilege escalation.
-- **T1027 (Obfuscated Files/Information)**: Base64 execution decoding on-the-fly.
-- **T1110.001 (Password Brute Force)**: SSH brute force detection and active response trigger.
-- **T1489 (Service Stop)**: Unintended termination of system security services via `systemctl` or `pkill`.
+| Rule ID | Level | Detection Category | Keys / Triggers | MITRE ATT&CK |
+| :--- | :--- | :--- | :--- | :--- |
+| **100100** | 8 | **C2 & Exfiltration** | `curl`, `scp`, `ssh`, `arp`, `host` | T1048, T1105 |
+| **100101** | 5 | **System & User Discovery** | `whoami`, `groups`, `ps`, `ifconfig`, `hostname` | T1033, T1082 |
+| **100102** | 7 | **File Search & Staging** | `find`, `tar`, `xclip` | T1560, T1119 |
+| **100103** | 8 | **Defense Evasion & Attributes** | `chmod`, `base64`, `truncate`, `touch`, `stat` | T1222.002, T1140 |
+| **100104** | 10 | **Firewall Tampering** | `/etc/ufw/` modifications, `ufw` execution, `free` | T1562.004 |
+| **100105** | 12 | **Log & History Tampering** | `/var/log/auth.log`, `/var/log/syslog`, `/root/.bash_history` | T1070.002, T1070.003 |
+| **100106** | 6 | **Interpreter Execution** | Python binary execution (`/usr/bin/python3`) | T1059.006 |
+| **100107** | 6 | **Suspicious Temp Activity** | File writes in `/tmp/` and `/var/tmp/` | T1074 |
+| **100108** | 10 | **Identity & Account Files** | Modifications to `/etc/passwd`, `/etc/shadow`, `/etc/group` | T1078, T1098 |
+| **100109** | 12 | **Sudoers Privilege Delegation** | Modifications to `/etc/sudoers`, `/etc/sudoers.d/` | T1548.003 |
+| **100110** | 9 | **SSH Configuration Tampering** | Modifications to `/etc/ssh/sshd_config`, `/etc/ssh/sshd_config.d` | T1098.004 |
+| **100111** | 6 | **Non-System User Sudo Exec** | Privileged command execution via `/usr/bin/sudo` | T1548.003 |
+| **100112** | 12 | **PAM Authentication Tampering** | Modifications to `/etc/pam.d/` | T1556, T1078 |
 
 ---
 
