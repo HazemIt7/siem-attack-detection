@@ -6,6 +6,8 @@ folder-structure.txt
 *.veg
 *.msi
 *.log
+caledra.txt
+deploy_fail.txt
 
 # System & IDE files
 .DS_Store

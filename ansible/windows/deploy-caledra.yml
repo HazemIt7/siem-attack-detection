@@ -1,0 +1,44 @@
+---
+- name: Deploy Caldera Sandcat Agent on Windows
+  hosts: windows
+  vars:
+    caldera_server: "http://192.168.56.1:8888"
+    agent_group: "red"
+    agent_dir: "C:\\Caldera"
+
+  tasks:
+    - name: Create destination directory for Sandcat
+      ansible.windows.win_file:
+        path: "{{ agent_dir }}"
+        state: directory
+
+    - name: Download Caldera Sandcat agent binary
+      ansible.windows.win_shell: |
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $headers = @{
+            file = 'sandcat.go'
+            platform = 'windows'
+        }
+        $url = "{{ caldera_server }}/file/download"
+        $outFile = "{{ agent_dir }}\sandcat.exe"
+        Invoke-WebRequest -Uri $url -Headers $headers -OutFile $outFile -UseBasicParsing
+
+    - name: Stop existing Sandcat process if running
+      ansible.windows.win_shell: |
+        $proc = Get-Process -Name "sandcat" -ErrorAction SilentlyContinue
+        if ($proc) {
+            Stop-Process -InputObject $proc -Force -ErrorAction SilentlyContinue
+        }
+        exit 0
+      failed_when: false
+
+    - name: Register and start Caldera agent as a scheduled task
+      ansible.windows.win_shell: |
+        try {
+            Unregister-ScheduledTask -TaskName "CalderaAgent" -Confirm:$false -ErrorAction SilentlyContinue
+        } catch {}
+        $action = New-ScheduledTaskAction -Execute "{{ agent_dir }}\sandcat.exe" -Argument "-server {{ caldera_server }} -group {{ agent_group }}"
+        $trigger = New-ScheduledTaskTrigger -AtStartup
+        Register-ScheduledTask -TaskName "CalderaAgent" -Action $action -Trigger $trigger -User "SYSTEM" -Force
+        Start-ScheduledTask -TaskName "CalderaAgent"
+        exit 0

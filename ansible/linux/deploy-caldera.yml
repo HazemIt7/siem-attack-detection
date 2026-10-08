@@ -1,0 +1,55 @@
+---
+- name: Deploy Caldera Sandcat Agent on Linux
+  hosts: all
+  become: yes
+  vars:
+    caldera_server: "http://192.168.56.1:8888"
+    agent_group: "red"
+
+  tasks:
+    - name: Ensure curl is installed
+      ansible.builtin.package:
+        name: curl
+        state: present
+
+    - name: Download Caldera Sandcat agent binary
+      ansible.builtin.shell:
+        cmd: "curl -s -X POST -H 'file:sandcat.go' -H 'platform:linux' {{ caldera_server }}/file/download -o /usr/local/bin/sandcat"
+      args:
+        creates: /usr/local/bin/sandcat
+
+    - name: Ensure Sandcat binary is executable
+      ansible.builtin.file:
+        path: /usr/local/bin/sandcat
+        mode: '0755'
+        state: file
+
+    - name: Create systemd service for Caldera Sandcat Agent
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/caldera-agent.service
+        content: |
+          [Unit]
+          Description=Caldera Sandcat Agent
+          After=network.target
+
+          [Service]
+          Type=simple
+          ExecStart=/usr/local/bin/sandcat -server {{ caldera_server }} -group {{ agent_group }}
+          Restart=always
+          RestartSec=5
+          StandardOutput=journal
+          StandardError=journal
+
+          [Install]
+          WantedBy=multi-user.target
+        mode: '0644'
+
+    - name: Reload systemd daemon
+      ansible.builtin.systemd:
+        daemon_reload: yes
+
+    - name: Start and enable Caldera Sandcat service
+      ansible.builtin.systemd:
+        name: caldera-agent
+        state: restarted
+        enabled: yes
