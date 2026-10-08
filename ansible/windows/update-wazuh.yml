@@ -9,6 +9,16 @@
         dest: 'C:\Program Files (x86)\ossec-agent\ossec.conf'
         backup: yes  # Crée une sauvegarde automatique de l'ancien fichier (.bak)
 
+    - name: Copier le script Active Response remove-threat.ps1
+      ansible.windows.win_copy:
+        src: remove-threat.ps1
+        dest: 'C:\Program Files (x86)\ossec-agent\active-response\bin\remove-threat.ps1'
+
+    - name: Copier le wrapper Active Response remove-threat.cmd
+      ansible.windows.win_copy:
+        src: remove-threat.cmd
+        dest: 'C:\Program Files (x86)\ossec-agent\active-response\bin\remove-threat.cmd'
+
     - name: Redémarrer le service Wazuh
       ansible.windows.win_service:
         name: WazuhSvc

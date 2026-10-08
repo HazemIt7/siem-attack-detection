@@ -27,7 +27,11 @@ siem-attack-detection/
 │       ├── inventory.ini             # Windows targets inventory
 │       └── ossec.conf                # Wazuh Windows agent config
 ├── wazuh-server/
-│   └── local_rules.xml               # Custom SIEM detection rules (ID 100100-100112)
+│   ├── local_rules.xml               # Custom SIEM detection rules (ID 100100-100201, 100092-100093)
+│   └── threat-intelligence/          # VirusTotal & Active Response integration module
+│       ├── ossec_integrations.xml    # Integration & active-response configuration snippets
+│       ├── setup-threat-intel.sh     # Automation deployment script
+│       └── README.md                 # Setup & testing guide
 ├── docs/
 │   ├── architecture-diagram.png      # VirtualBox host-only topology diagram
 │   └── report.pdf                    # Full project documentation & PFE report
@@ -73,6 +77,10 @@ The detection engine correlates high-fidelity Auditd events (`auid >= 1000` to f
 | **100110** | 9 | **SSH Configuration Tampering** | Modifications to `/etc/ssh/sshd_config`, `/etc/ssh/sshd_config.d` | T1098.004 |
 | **100111** | 6 | **Non-System User Sudo Exec** | Privileged command execution via `/usr/bin/sudo` | T1548.003 |
 | **100112** | 12 | **PAM Authentication Tampering** | Modifications to `/etc/pam.d/` | T1556, T1078 |
+| **100200** | 7 | **FIM Monitored File Modified** | File modified in `/root` or `/tmp` directory (Triggers VirusTotal) | T1204.002 |
+| **100201** | 7 | **FIM Monitored File Added** | File added to `/root` or `/tmp` directory (Triggers VirusTotal) | T1204.002 |
+| **87105** | 12 | **VirusTotal Malicious Binary** | VirusTotal detected malicious file on endpoint | T1204.002, T1059 |
+| **100092** | 12 | **Active Response Threat Removal** | `remove-threat.sh` permanently eliminated detected malware | T1204.002 |
 
 ---
 
@@ -193,7 +201,7 @@ Planned enhancements for the SIEM detection and telemetry pipeline:
 - [x] **Automated Adversary Emulation**: Integrated **Apache Caldera** to automate multi-stage attack simulations across Linux and Windows endpoints with Ansible deployment.
 - [ ] **SOAR Integration**: Connect Wazuh with **Shuffle SOAR** or **Cortex** to automate incident response playbooks (e.g., auto-isolating compromised endpoints and blocking malicious IP addresses at the firewall).
 - [ ] **Network Security Monitoring (NSM)**: Integrate **Suricata** NIDS telemetry (`eve.json`) into Wazuh agents.
-- [ ] **Threat Intelligence Feed Integration**: Incorporate **MISP** and **AlienVault OTX** feeds into Wazuh Server for automated IoC (IPs, domain names, file hashes) correlation.
+- [x] **Threat Intelligence & SOAR Active Response**: Integrated **VirusTotal** API with automated **Active Response** to immediately isolate and permanently delete malicious payloads in real-time (Rules 100200–100201, 87105, 100092).
 - [ ] **Detection-as-Code with Sigma**: Store rules in standardized Sigma YAML format and compile them into Wazuh rules via CI/CD.
 - [ ] **Machine Learning Anomaly Detection**: Implement ML-based user & entity behavior analytics (UEBA) for detecting baseline authentication and network anomalies.
 

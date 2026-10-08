@@ -146,3 +146,40 @@
   </rule>
 
 </group>
+
+<!-- ========================================================================= -->
+<!-- OFFICIAL WAZUH VIRUSTOTAL INTEGRATION & ACTIVE RESPONSE RULES            -->
+<!-- Documentation: https://documentation.wazuh.com/current/proof-of-concept-guide/detect-remove-malware-virustotal.html -->
+<!-- ========================================================================= -->
+
+<group name="syscheck,pci_dss_11.5,nist_800_53_SI.7,">
+    <!-- Rules to trigger VirusTotal on modified/added files in monitored paths -->
+    <rule id="100200" level="7">
+        <if_sid>550</if_sid>
+        <field name="file">/root|/tmp</field>
+        <description>File modified in /root or /tmp directory.</description>
+    </rule>
+    <rule id="100201" level="7">
+        <if_sid>554</if_sid>
+        <field name="file">/root|/tmp</field>
+        <description>File added to /root or /tmp directory.</description>
+    </rule>
+</group>
+
+<group name="virustotal,">
+  <!-- Active Response Feedback Rules (Rule 657 is active response output) -->
+  <rule id="100092" level="12">
+    <if_sid>657</if_sid>
+    <match>Successfully removed threat</match>
+    <description>$(parameters.program) removed threat located at $(parameters.alert.data.virustotal.source.file)</description>
+    <mitre>
+      <id>T1204.002</id>
+    </mitre>
+  </rule>
+
+  <rule id="100093" level="12">
+    <if_sid>657</if_sid>
+    <match>Error removing threat</match>
+    <description>Error removing threat located at $(parameters.alert.data.virustotal.source.file)</description>
+  </rule>
+</group>

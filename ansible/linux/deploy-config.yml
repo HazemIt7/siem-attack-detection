@@ -20,6 +20,30 @@
         mode: '0660'
       notify: Restart wazuh-agent
 
+    - name: Installer le paquet jq (requis par le script active response)
+      ansible.builtin.apt:
+        name: jq
+        state: present
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Déployer le script Active Response remove-threat.sh
+      ansible.builtin.copy:
+        src: remove-threat.sh
+        dest: /var/ossec/active-response/bin/remove-threat.sh
+        owner: root
+        group: wazuh
+        mode: '0750'
+
+    - name: Créer le lien remove-threat vers remove-threat.sh
+      ansible.builtin.file:
+        src: /var/ossec/active-response/bin/remove-threat.sh
+        dest: /var/ossec/active-response/bin/remove-threat
+        owner: root
+        group: wazuh
+        state: link
+        force: true
+
   handlers:
     - name: Reload auditd rules
       ansible.builtin.command:

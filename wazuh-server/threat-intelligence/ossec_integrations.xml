@@ -1,0 +1,35 @@
+<!--
+  =============================================================================
+  Wazuh Threat Intelligence Integration (VirusTotal) & Active Response
+  =============================================================================
+  Append these <integration> blocks inside the <ossec_config> section of:
+  /var/ossec/etc/ossec.conf on the Wazuh Manager (192.168.56.10).
+-->
+
+<ossec_config>
+
+  <!-- 1. VirusTotal Integration (Native) -->
+  <!-- Queries VirusTotal API whenever rules 100200 or 100201 are triggered (file modified/added) -->
+  <integration>
+    <name>virustotal</name>
+    <api_key>YOUR_VIRUSTOTAL_API_KEY_HERE</api_key>
+    <rule_id>100200,100201</rule_id>
+    <alert_format>json</alert_format>
+  </integration>
+
+  <!-- 2. Active Response: Automatic Malicious File Removal (Linux: remove-threat.sh) -->
+  <!-- Official PoC Guide: https://documentation.wazuh.com/current/proof-of-concept-guide/detect-remove-malware-virustotal.html -->
+  <command>
+    <name>remove-threat</name>
+    <executable>remove-threat.sh</executable>
+    <timeout_allowed>no</timeout_allowed>
+  </command>
+
+  <active-response>
+    <disabled>no</disabled>
+    <command>remove-threat</command>
+    <location>local</location>
+    <rules_id>87105</rules_id>
+  </active-response>
+
+</ossec_config>
