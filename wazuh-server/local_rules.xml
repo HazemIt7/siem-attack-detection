@@ -145,6 +145,46 @@
     </mitre>
   </rule>
 
+<!-- False positive remove -->
+
+<rule id="100113" level="0">
+  <if_sid>100102</if_sid>
+  <field name="audit.execve.a1">^/var/lib/landscape/landscape-sysinfo.cache</field>
+  <description>Ignore benign MOTD landscape sysinfo find check</description>
+</rule>
+
+<rule id="100114" level="0">
+  <if_sid>100102</if_sid>
+  <field name="audit.execve.a1">^/var/lib/update-notifier/updates-available</field>
+  <description>Ignore benign MOTD landscape sysinfo find check</description>
+</rule>
+
+<rule id="100115" level="0">
+  <if_sid>100102</if_sid>
+  <field name="audit.execve.a1">^/var/lib/update-notifier/hwe-eol </field>
+  <description>Ignore benign MOTD landscape sysinfo find check</description>
+</rule>
+
+<rule id="100116" level="0">
+  <if_sid>100103</if_sid>
+  <field name="audit.execve.a2">^/var/lib/landscape/landscape-sysinfo.cache</field>
+  <description>Ignore benign MOTD release upgrader stat check</description>
+</rule>
+
+<rule id="100117" level="0">
+  <if_sid>100103</if_sid>
+  <field name="audit.execve.a3">^/var/lib/ubuntu-release-upgrader/release-upgrade-available</field>
+  <description>Ignore benign MOTD release upgrader stat check</description>
+</rule>
+
+<rule id="100118" level="0">
+  <if_sid>100103</if_sid>
+  <field name="audit.execve.a3">^/var/lib/update-notifier/fsck-at-reboot</field>
+  <description>Ignore benign MOTD release upgrader stat check</description>
+</rule>
+
+
+
 </group>
 
 <!-- ========================================================================= -->

@@ -42,8 +42,9 @@
 
 
 # --- 6. Log Tampering and Clearing History ---
--w /var/log/auth.log -p wa -k susp_log_tampering
--w /var/log/syslog -p wa -k susp_log_tampering
+-a always,exit -F arch=b64 -S open,openat,creat -F dir=/tmp/ -F auid>=1000 -F auid!=4294967295     -k susp_tmp_activity
+-a always,exit -F arch=b64 -S open,openat,creat -F dir=/var/tmp/ -F auid>=1000 -F auid!=4294967295 -k susp_tmp_activity
+
 
 # Watch for bash history modifications (wildcards like /home/*/.bash_history are NOT supported by auditd)
 # We will watch the /root directory for file changes instead to detect root's bash history being tampered

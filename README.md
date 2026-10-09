@@ -28,6 +28,7 @@ siem-attack-detection/
 │       └── ossec.conf                # Wazuh Windows agent config
 ├── wazuh-server/
 │   ├── local_rules.xml               # Custom SIEM detection rules (ID 100100-100201, 100092-100093)
+│   ├── ossec.conf                    # Wazuh Manager central config (Active Response & Threat Intel)
 │   └── threat-intelligence/          # VirusTotal & Active Response integration module
 │       ├── ossec_integrations.xml    # Integration & active-response configuration snippets
 │       ├── setup-threat-intel.sh     # Automation deployment script
@@ -81,6 +82,7 @@ The detection engine correlates high-fidelity Auditd events (`auid >= 1000` to f
 | **100201** | 7 | **FIM Monitored File Added** | File added to `/root` or `/tmp` directory (Triggers VirusTotal) | T1204.002 |
 | **87105** | 12 | **VirusTotal Malicious Binary** | VirusTotal detected malicious file on endpoint | T1204.002, T1059 |
 | **100092** | 12 | **Active Response Threat Removal** | `remove-threat.sh` permanently eliminated detected malware | T1204.002 |
+| **5763 / 5551** | 10 | **Brute Force SSH / Auth Failures** | Multiple failed authentications trigger `firewall-drop` (10m ban) | T1110.001 |
 
 ---
 
