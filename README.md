@@ -27,8 +27,10 @@ siem-attack-detection/
 │       ├── inventory.ini             # Windows targets inventory
 │       └── ossec.conf                # Wazuh Windows agent config
 ├── wazuh-server/
+│   ├── integrations/
+│   │   └── custom-discord            # Custom Discord Webhook integration script (Level >= 10 alerts)
 │   ├── local_rules.xml               # Custom SIEM detection rules (ID 100100-100201, 100092-100093)
-│   ├── ossec.conf                    # Wazuh Manager central config (Active Response & Threat Intel)
+│   ├── ossec.conf                    # Wazuh Manager central config (Active Response, Threat Intel, Discord)
 │   └── threat-intelligence/          # VirusTotal & Active Response integration module
 │       ├── ossec_integrations.xml    # Integration & active-response configuration snippets
 │       ├── setup-threat-intel.sh     # Automation deployment script
@@ -201,6 +203,7 @@ flowchart TD
 Planned enhancements for the SIEM detection and telemetry pipeline:
 
 - [x] **Automated Adversary Emulation**: Integrated **Apache Caldera** to automate multi-stage attack simulations across Linux and Windows endpoints with Ansible deployment.
+- [x] **Real-Time SOC Notifications**: Integrated custom **Discord Webhook** alerts (`custom-discord`) on Wazuh Manager for high-severity alerts (Level $\ge 10$, MITRE mapping, attacker IP, and agent details).
 - [ ] **SOAR Integration**: Connect Wazuh with **Shuffle SOAR** or **Cortex** to automate incident response playbooks (e.g., auto-isolating compromised endpoints and blocking malicious IP addresses at the firewall).
 - [ ] **Network Security Monitoring (NSM)**: Integrate **Suricata** NIDS telemetry (`eve.json`) into Wazuh agents.
 - [x] **Threat Intelligence & SOAR Active Response**: Integrated **VirusTotal** API with automated **Active Response** to immediately isolate and permanently delete malicious payloads in real-time (Rules 100200–100201, 87105, 100092).
